@@ -32,7 +32,9 @@ USYVL website.
 <br>
 EOF;
 
-$h->a_br("scheduling","USYVL Schedule Building Utilities","Tools to maintain the Game Schedules portion of the website.");
+$h->a_br("scheduling","USYVL Schedule Building Utilities (Current revision)","Tools to maintain the Game Schedules portion of the website.");
+$h->a_br("previous-sched","USYVL Schedule Building Utilities (Older revision)","Backup copy (not completely up-to-date) in case the most current revision has unforseen issues.");
+$h->a_br("sandbox-sched","USYVL Schedule Building Utilities (Sandbox copy)","Sandbox version - file xfers have different destinations.");
 $h->a_br("donate","USYVL Donorlist Builder","Tools to create and maintain the donorlist image on the Donate page.");
 $h->a_br("workflow","USYVL workflow","Workflow system to manage sites over the course of a season.");
 $h->a_br("mobile","USYVL mobile","Mobile version providing access to schedules.");
