@@ -11,6 +11,7 @@ class usyvlUtilsIndex {
         $this->requri = $_SERVER['REQUEST_URI'];
         $this->dir = dirname($_SERVER['REQUEST_URI']);
         $this->local = 'http://' . $this->server . $this->dir;
+        $this->locals = 'https://' . $this->server . $this->dir;
         $this->buf = '';
 
         // start this list off with files/dirs we do NOT want to show up at the bottom (optional)
@@ -62,7 +63,7 @@ class usyvlUtilsIndex {
 
         // should compare entry to this->local, if they are the same, then we have a URL that matches.
         // possibly indicate that situation in the link somehow, not sure exactly how though
-        $indicator = ( $this->local == $entry ) ?  " #" : "";
+        $indicator = ( $this->local == $entry || $this->locals == $entry ) ?  " #" : "";
 
         $this->specified[] = $entry;
         $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' . $desc ;
