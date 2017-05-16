@@ -9,7 +9,7 @@ class usyvlUtilsIndex {
     function __construct(){
         $this->server = $_SERVER['SERVER_NAME'];
         $this->requri = $_SERVER['REQUEST_URI'];
-        $this->dir = dirname($_SERVER['REQUEST_URI']);
+        $this->dir = dirname($_SERVER['SCRIPT_NAME']);
         $this->local = 'http://' . $this->server . $this->dir;
         $this->locals = 'https://' . $this->server . $this->dir;
         $this->buf = '';
@@ -61,9 +61,13 @@ class usyvlUtilsIndex {
 
         if (! $exists && ! $absurl ) return;   // skip any non-existent entry
 
-        // should compare entry to this->local, if they are the same, then we have a URL that matches.
+        // could compare entry to this->local, if they are the same, then we have a URL that matches.
+        // indicating that this copy, is the absolute URL referenced.
         // possibly indicate that situation in the link somehow, not sure exactly how though
-        $indicator = ( $this->local == $entry || $this->locals == $entry ) ?  " #" : "";
+        if ($absurl){
+            $indicator = ( $this->local == dirname($entry) || $this->locals == dirname($entry) ) ?  " #" : "";
+        }
+        else {  $indicator = ""; }
 
         $this->specified[] = $entry;
         $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' . $desc ;
