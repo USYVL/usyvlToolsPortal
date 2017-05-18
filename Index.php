@@ -47,7 +47,7 @@ class usyvlUtilsIndex {
         }
     }
     function knownEntries(){
-        $this->newSection('Local Copy - Scheduling - backups, sandboxes, etc...:');
+        $this->newSection('Local Copy - Scheduling - backups, sandboxes, etc... (copy is specific to this dev or hosting):');
         $this->addEntry("scheduling","USYVL Schedule Building Utilities (Current revision)","Tools to maintain the Game Schedules portion of the website.");
         $this->addEntry("previous-sched","USYVL Schedule Building Utilities (Older revision)","Backup copy (not completely up-to-date) in case the most current revision has unforseen issues.");
         $this->addEntry("sandbox-sched","USYVL Schedule Building Utilities (Sandbox copy)","Sandbox version - file xfers have different destinations.");
@@ -58,7 +58,7 @@ class usyvlUtilsIndex {
         $this->addEntry("youthvb","Youthvolleyball.com","Youthvb code.");
         $this->addEntry("mwf","Mobile Web Framework","MWF code.");
 
-        $this->newSection('Absolute references - (do not change based on dev platform):');
+        $this->newSection('Absolute references - (do not change based on dev or hosting platform):');
         $this->addEntry("http://www.usyvl.org","USYVL Home Page","USYVL Live Public Server");
         $this->addEntry("http://m.usyvl.org","Mobile Site (live)","USYVL Live Mobile Site");
         $this->addEntry("http://schedules.usyvl.org","Schedules Site (live)","USYVL Live Schedules Site");
