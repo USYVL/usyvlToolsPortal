@@ -11,11 +11,11 @@ class usyvlUtilsIndex {
         $this->requri = $_SERVER['REQUEST_URI'];
         $this->dir = dirname($_SERVER['SCRIPT_NAME']);
         $this->local = 'http://' . $this->server . $this->dir;
-        $this->locals = 'https://' . $this->server . $this->dir;
+        $this->localS = 'https://' . $this->server . $this->dir;
         $this->buf = '';
 
         // start this list off with files/dirs we do NOT want to show up at the bottom (optional)
-        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6');
+        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store');
         $this->fileList = array();
         // scan local dir for directories and files
         // add in the specific ones we want to include
@@ -37,6 +37,8 @@ class usyvlUtilsIndex {
         if ( count($this->others) == 0) return;
         $this->newSection('Additional unspecified directories existing in this folder:');
         foreach($this->others as $o){
+            if (is_link($o)) continue;
+
             $desc = "Unknown folder (consider adding README.md)";
             //print "other: $o<br>\n";
             if (file_exists($o . "/README.md")) {
@@ -84,10 +86,21 @@ class usyvlUtilsIndex {
         // possibly indicate that situation in the link somehow, not sure exactly
         // how or what we want to do and if there is a real significance in it.
         // only really applicable to the wiki it looks like.
+        $indicator = "";
         if ($absurl){
-            $indicator = ( $this->local == dirname($entry) || $this->locals == dirname($entry) ) ?  " #" : "";
+            if ( $this->local == dirname($entry) || $this->localS == dirname($entry) ){
+                // the server is the same
+                $indicator = " #";
+
+                // since the entry specified is on the local server see if the basename
+                // portion matches a directory at this location, if so tag it so it doesn't
+                // show up in the other section.
+                $bn = basename($entry);
+                if( file_exists($bn) && is_dir($bn)){
+                    $this->specified[] = $bn;
+                }
+            }
         }
-        else {  $indicator = ""; }
 
         $this->specified[] = $entry;
         $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' . $desc ;
