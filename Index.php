@@ -22,12 +22,31 @@ class usyvlUtilsIndex {
         // display any additional items found
         $this->fileList = scandir_gen(".",false);
 
-        $this->entries();
-        $others = array_diff($this->fileList,$this->specified);
+        $this->knownEntries();
+
+        // once the primary, knownn entries are checked and possibly accumulated in the buffer,
+        // lets see if there are others to display
+        $this->remainingEntries();
+
+    }
+    function remainingEntries(){
+        $this->others = array_diff($this->fileList,$this->specified);
         //print_pre($this->fileList,"filelist");
         //print_pre($others,"others");
+
+        if ( count($this->others) == 0) return;
+        $this->newSection('Additional unspecified directories existing in this folder:');
+        foreach($this->others as $o){
+            $desc = "Unknown folder (consider adding README.md)";
+            //print "other: $o<br>\n";
+            if (file_exists($o . "/README.md")) {
+                $lines = file($o . "/README.md");
+                $desc = $lines[0];
+            }
+            $this->addEntry($o,"$o",$desc);
+        }
     }
-    function entries(){
+    function knownEntries(){
         $this->newSection('Local Copy - Scheduling - backups, sandboxes, etc...:');
         $this->addEntry("scheduling","USYVL Schedule Building Utilities (Current revision)","Tools to maintain the Game Schedules portion of the website.");
         $this->addEntry("previous-sched","USYVL Schedule Building Utilities (Older revision)","Backup copy (not completely up-to-date) in case the most current revision has unforseen issues.");
@@ -45,7 +64,6 @@ class usyvlUtilsIndex {
         $this->addEntry("http://schedules.usyvl.org","Schedules Site (live)","USYVL Live Schedules Site");
         $this->addEntry("http://youthvolleyball.com","YouthVolleyball.com (live)","YouthVolleyball.com site");
         $this->addEntry("http://venom.eri.ucsb.edu/aaron/usyvl/wiki","Wiki for USYVL software dev","USYVL development/deployment wiki");
-
     }
     // Trying to sort out if we want to group absolute references (ie: URLs) together
     // programmatically, or require input to do so.  Also, do we want to differentiate
@@ -63,7 +81,9 @@ class usyvlUtilsIndex {
 
         // could compare entry to this->local, if they are the same, then we have a URL that matches.
         // indicating that this copy, is the absolute URL referenced.
-        // possibly indicate that situation in the link somehow, not sure exactly how though
+        // possibly indicate that situation in the link somehow, not sure exactly
+        // how or what we want to do and if there is a real significance in it.
+        // only really applicable to the wiki it looks like.
         if ($absurl){
             $indicator = ( $this->local == dirname($entry) || $this->locals == dirname($entry) ) ?  " #" : "";
         }
