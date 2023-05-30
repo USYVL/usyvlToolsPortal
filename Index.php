@@ -1,6 +1,50 @@
 <?php
-set_include_path(get_include_path() . PATH_SEPARATOR . '/usr/local/lib/site-php');
+// This requires access to some shared external resources, so we need to do some 
+// error checking for that.
+define('CONFIG_FILE',"./config.php");
 
+class errPage {
+    function __construct($a=array('body' => "Default Body Text",'title' => "USYVL Tools Portal")){
+        $this->data = $a;
+    }
+    function run(){
+        $buf  = "<!doctype html>\n<html lang=\"en\">\n<head\n";
+        $buf .= "  <meta charset=\"utf-8\">\n";
+        $buf .= "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
+        $buf .= "  <title>{$this->data['title']}</title>\n";
+        $buf .= "  <meta name=\"description\" content=\"USYVL Tools Portal\">\n";
+        $buf .= "  <meta name=\"author\" content=\"USYVL\">\n";
+        $buf .= "</head>\n\n";
+        $buf .= "<body>\n{$this->data['body']}\n</body>\n</html>\n";
+        print "$buf";
+        exit();
+    }
+}
+// check for config file
+if (file_exists(CONFIG_FILE)){
+    include_once CONFIG_FILE;
+}
+else{
+    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"No config.php file found - copy config.php.default to config.php and then modify values appropriately")))->run();
+}
+
+if (! defined('LOCAL_INCLUDE_PATHS')){
+    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"LOCAL_INCLUDE_PATHS undefined in config file (". CONFIG_FILE . ")")))->run();
+}
+
+$ipaths = explode(PATH_SEPARATOR,LOCAL_INCLUDE_PATHS);
+foreach($ipaths as $ipc){
+    if ( ! is_dir($ipc)){
+        $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"A path ($ipc) in LOCAL_INCLUDE_PATHS does not exist.  Modify config file (". CONFIG_FILE . ")")))->run();
+    }
+}
+set_include_path(get_include_path() . PATH_SEPARATOR . LOCAL_INCLUDE_PATHS);
+
+if (! stream_resolve_include_path('htmlDoc.php')){
+    $gip = get_include_path();
+    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"Unable to find htmlDoc.php in the current include path ($gip)")))->run();
+
+}
 require_once('htmlDoc.php');
 require_once('fileUtils.php');
 require_once('printUtils.php');
@@ -110,7 +154,7 @@ class usyvlUtilsIndex {
         return $this->buf;
     }
 }
-$h = new htmlDoc("USYVL Utility Websites","");
+$h = new htmlDoc("USYVL Tools Portal","");
 $h->setHeading();
 
 $h->addStyle("body { font-family: arial,verdana,helvetica; font-size: 10pt; }");
@@ -122,9 +166,36 @@ $h->addStyle("h1 { padding: 0px; margin: 0px; vertical-align: top; font-family: 
 $h->addStyle("h2 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 16pt; font-style: bold; color: 000000; border: 0;}");
 $h->addStyle("h3 { padding: 0px; padding-top: 5px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12pt; font-style: bold; color: 000000; border: 0;}");
 $h->addStyle("a { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; color: 000000; border: 0;}");
+$h->addStyle("div.version {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 5px;
+    vertical-align: top;
+    font-family: helvetica;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #aa0000;
+    border: 0;
+    display: inline-block;
+}"); 
+$h->addStyle("div.installation {
+    padding: 0px;
+    margin: 0px;
+    margin-left: 0.5em;
+    margin-bottom: 5px;
+    vertical-align: top;
+    font-family: helvetica;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0000aa;
+    border: 0;
+    display: inline-block;
+}"); 
 
 $h->beg();
 
+$version = "Placeholder";
+$installation_nickname = INSTALLATION_NICKNAME;
 $uui = new usyvlUtilsIndex();
 // this should be rejiggered using divs...
 print <<<EOF
@@ -134,7 +205,8 @@ print <<<EOF
 <img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br>
 </td>
 <td class='banner'>
-<h1>USYVL Utilities</h1>
+<h1>USYVL Tools Portal</h1>
+<div class="version">$version</div> on <div class="installation">$installation_nickname</div>
 <p>
 These following sites provide tools for maintaining specific aspects of the
 USYVL website.
