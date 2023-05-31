@@ -79,7 +79,7 @@ class usyvlUtilsIndex {
         //print_pre($others,"others");
 
         if ( count($this->others) == 0) return;
-        $this->newSection('Additional unspecified directories existing in this folder:');
+        $this->newSection('Additional unspecified resources existing on this portal:');
         foreach($this->others as $o){
             if (is_link($o)) continue;
 
@@ -93,9 +93,10 @@ class usyvlUtilsIndex {
         }
     }
     function knownEntries(){
-        $this->newSection('Local Copy - Scheduling - backups, sandboxes, etc... (copy is specific to this dev or hosting):');
-        $this->addEntry("scheduling","USYVL Schedule Building Utilities (Current revision)","Tools to maintain the Game Schedules portion of the website.");
-        $this->addEntry("previous-sched","USYVL Schedule Building Utilities (Older revision)","Backup copy (not completely up-to-date) in case the most current revision has unforseen issues.");
+        $this->newSection('Local Installation Services - Scheduling - backups, sandboxes, etc... (copy is specific to this dev or hosting):');
+        $this->addEntry("scheduling","USYVL Scheduling (Curr)","Tools to maintain the Game Schedules portion of the website.");
+        $this->addEntry("sched-prev","USYVL Scheduling (Prev)","Previous (stable) version in case the most current revision has unforseen issues.");
+        $this->addEntry("sched-dev" ,"USYVL Scheduling (Dev)","Development version for testing.");
         $this->addEntry("sandbox-sched","USYVL Schedule Building Utilities (Sandbox copy)","Sandbox version - file xfers have different destinations.");
 
         $this->addEntry("donate","USYVL Donorlist Builder","Tools to create and maintain the donorlist image on the Donate page.");
@@ -120,8 +121,9 @@ class usyvlUtilsIndex {
     }
     // Do we want to try to track the ones that are skipped?  To output below the main list as available
     function addEntry($entry,$label,$desc,$ageFrom = ''){
-        $exists = file_exists($entry);
+        $exists   = file_exists($entry);
         $absurl   = preg_match('/^https*:\/\//',$entry);
+        $lversion  = '';
 
         if (! $exists && ! $absurl ) return;   // skip any non-existent entry
 
@@ -145,14 +147,28 @@ class usyvlUtilsIndex {
                 }
             }
         }
+        else {
+            // see if a version.php file exists
+            if (file_exists($entry . '/version.php')){
+                include $entry . '/version.php';
+                $lversion = $GLOBALS['version'];
+            }
+        }
 
         $this->specified[] = $entry;
-        $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' . $desc ;
+        $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' ;
+        if ( isset($lversion) && $lversion != '') $this->buf .= " <span class=\"sub-version\">(version $lversion)</span> ";
+        $this->buf .= $desc ;
         $this->buf .= "$indicator<br />\n";
     }
     function output(){
         return $this->buf;
     }
+}
+// initial load of version, will have to add
+if ( file_exists('version.php')){
+    include 'version.php';
+    define('VERSION',$GLOBALS['version']);
 }
 $h = new htmlDoc("USYVL Tools Portal","");
 $h->setHeading();
@@ -181,7 +197,6 @@ $h->addStyle("div.version {
 $h->addStyle("div.installation {
     padding: 0px;
     margin: 0px;
-    margin-left: 0.5em;
     margin-bottom: 5px;
     vertical-align: top;
     font-family: helvetica;
@@ -191,42 +206,29 @@ $h->addStyle("div.installation {
     border: 0;
     display: inline-block;
 }"); 
+$h->addStyle("#banner-container { /* border: solid 1px green; */ margin: 0; vertical-align: top; }");
+$h->addStyle("#logo-container { /* border: solid 1px red; */ margin: 0px; vertical-align: top; display: inline-block; }");
+$h->addStyle("#text-container { /* border: solid 1px blue; */ margin-left: 10px; vertical-align: top; display: inline-block; }");
+$h->addStyle(".sub-version { font-style: italic; font-weight: bold; color: green; }");
 
 $h->beg();
 
-$version = "Placeholder";
+$version = VERSION;
 $installation_nickname = INSTALLATION_NICKNAME;
 $uui = new usyvlUtilsIndex();
 // this should be rejiggered using divs...
 print <<<EOF
-<table border=0 width='100%'>
-<tr>
-<td style='padding: 0px; width: 80px; '>
-<img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br>
-</td>
-<td class='banner'>
+<div id="banner-container">
+<div id="logo-container"><img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br></div><!-- end logo-container -->
+<div id="text-container">
 <h1>USYVL Tools Portal</h1>
-<div class="version">$version</div> on <div class="installation">$installation_nickname</div>
-<p>
-These following sites provide tools for maintaining specific aspects of the
-USYVL website.
-</p>
-</td>
-</tr>
-</table>
+<div class="version">version $version</div> install on <div class="installation">$installation_nickname</div>
+<h3>This portal provides links to various resources used to maintain USYVL schedules</h3>
+</div><!-- end text-container -->
+</div><!-- end banner-container -->
 <br>
 EOF;
 
-//$h->a_br("scheduling","USYVL Schedule Building Utilities (Current revision)","Tools to maintain the Game Schedules portion of the website.");
-//$h->a_br("previous-sched","USYVL Schedule Building Utilities (Older revision)","Backup copy (not completely up-to-date) in case the most current revision has unforseen issues.");
-//$h->a_br("sandbox-sched","USYVL Schedule Building Utilities (Sandbox copy)","Sandbox version - file xfers have different destinations.");
-//$h->a_br("donate","USYVL Donorlist Builder","Tools to create and maintain the donorlist image on the Donate page.");
-//$h->a_br("workflow","USYVL workflow","Workflow system to manage sites over the course of a season.");
-//$h->a_br("mobile","USYVL mobile","Mobile version providing access to schedules.");
-//$h->a_br("http://www.usyvl.org","USYVL Home Page","USYVL Live Public Server");
-//$h->a_br("wiki","Wiki for USYVL software development/deployment","USYVL development wiki");
-//
-//print "==========================<br>\n";
 print $uui->output();
 
 

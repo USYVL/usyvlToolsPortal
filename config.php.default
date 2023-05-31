@@ -1,0 +1,9 @@
+<?php
+// this is the config file for usyvlToolsPortal
+
+
+// specify additional include paths needed by the portal (ie: git@github.com:USYVL/php-utils.)
+define('LOCAL_INCLUDE_PATHS',"/usr/local/lib/site-php");
+define('INSTALLATION_NICKNAME',"My-Installation-NickName");
+
+?>
