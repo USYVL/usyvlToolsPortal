@@ -14,7 +14,7 @@ class errPage {
         $buf .= "  <title>{$this->data['title']}</title>\n";
         $buf .= "  <meta name=\"description\" content=\"USYVL Tools Portal\">\n";
         $buf .= "  <meta name=\"author\" content=\"USYVL\">\n";
-        $buf .= "</head>\n\n";
+        $buf .= "</head>\n";
         $buf .= "<body>\n{$this->data['body']}\n</body>\n</html>\n";
         print "$buf";
         exit();
@@ -50,6 +50,16 @@ require_once('fileUtils.php');
 require_once('printUtils.php');
 
 class usyvlUtilsIndex {
+    private   string  $server;
+    private   string  $requri;
+    private   string  $dir;
+    private   string  $local;
+    private   string  $localS;
+    private   string  $buf;
+    private   array   $specified;
+    private   array   $fileList;
+    private   array   $others;
+
     function __construct(){
         $this->server = $_SERVER['SERVER_NAME'];
         $this->requri = $_SERVER['REQUEST_URI'];
@@ -59,7 +69,7 @@ class usyvlUtilsIndex {
         $this->buf = '';
 
         // start this list off with files/dirs we do NOT want to show up at the bottom (optional)
-        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store');
+        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store','config.php','config.php.default','version.php');
         $this->fileList = array();
         // scan local dir for directories and files
         // add in the specific ones we want to include
@@ -79,7 +89,7 @@ class usyvlUtilsIndex {
         //print_pre($others,"others");
 
         if ( count($this->others) == 0) return;
-        $this->newSection('Additional unspecified resources existing on this portal:');
+        $this->newSection('Dynamically Loaded, Unspecified Resources existing on this portal:');
         foreach($this->others as $o){
             if (is_link($o)) continue;
 
@@ -93,7 +103,7 @@ class usyvlUtilsIndex {
         }
     }
     function knownEntries(){
-        $this->newSection('Local Installation Services - Scheduling - backups, sandboxes, etc... (copy is specific to this dev or hosting):');
+        $this->newSection('Local Resources specific to this installation - Scheduling - backups, sandboxes, etc... (copy is specific to this dev or hosting):');
         $this->addEntry("scheduling","USYVL Scheduling (Curr)","Tools to maintain the Game Schedules portion of the website.");
         $this->addEntry("sched-prev","USYVL Scheduling (Prev)","Previous (stable) version in case the most current revision has unforseen issues.");
         $this->addEntry("sched-dev" ,"USYVL Scheduling (Dev)","Development version for testing.");
@@ -103,14 +113,15 @@ class usyvlUtilsIndex {
         $this->addEntry("workflow","USYVL workflow","Workflow system to manage sites over the course of a season.");
         $this->addEntry("mobile","USYVL mobile","Mobile version providing access to schedules.");
         $this->addEntry("youthvb","Youthvolleyball.com","Youthvb code.");
+        $this->addEntry("wiki","USYVL Wiki","USYVL Development Documentation Wiki");
         $this->addEntry("mwf","Mobile Web Framework","MWF code.");
 
-        $this->newSection('Absolute references - (do not change based on dev or hosting platform):');
+        $this->newSection('Remote/External Resources - referenced through a fully qualified URI (does\'t change based on development/hosting platform):');
         $this->addEntry("http://www.usyvl.org","USYVL Home Page","USYVL Live Public Server");
         $this->addEntry("http://m.usyvl.org","Mobile Site (live)","USYVL Live Mobile Site");
         $this->addEntry("http://schedules.usyvl.org","Schedules Site (live)","USYVL Live Schedules Site");
         $this->addEntry("http://youthvolleyball.com","YouthVolleyball.com (live)","YouthVolleyball.com site");
-        $this->addEntry("http://venom.eri.ucsb.edu/aaron/usyvl/wiki","Wiki for USYVL software dev","USYVL development/deployment wiki");
+        $this->addEntry("http://tools.usyvl.org/wiki","USYV Wiki","USYVL Development Documentation Wiki");
     }
     // Trying to sort out if we want to group absolute references (ie: URLs) together
     // programmatically, or require input to do so.  Also, do we want to differentiate
@@ -156,10 +167,10 @@ class usyvlUtilsIndex {
         }
 
         $this->specified[] = $entry;
-        $this->buf .= '<a href="' . $entry . '">' . $label . '</a> - ' ;
-        if ( isset($lversion) && $lversion != '') $this->buf .= " <span class=\"sub-version\">(version $lversion)</span> ";
-        $this->buf .= $desc ;
-        $this->buf .= "$indicator<br />\n";
+        $this->buf .= '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
+        if ( isset($lversion) && $lversion != '') $this->buf .= " <span class=\"sub-version\">(v$lversion)</span> ";
+        $this->buf .= "<span>$desc</span>" ;
+        $this->buf .= "$indicator</div><br>\n";
     }
     function output(){
         return $this->buf;
@@ -173,12 +184,12 @@ if ( file_exists('version.php')){
 $h = new htmlDoc("USYVL Tools Portal","");
 $h->setHeading();
 
-$h->addStyle("body { font-family: arial,verdana,helvetica; font-size: 10pt; }");
-$h->addStyle("td { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 14; color: 000000; border: 0;}");
-$h->addStyle("table { border-collapse: collapse;}");
-$h->addStyle(".banner { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
-$h->addStyle(".rcell { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
-$h->addStyle("h1 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 20pt; font-style: bold; color: 000000; border: 0;}");
+$h->addStyle("body { font-family: arial,verdana,helvetica; font-size: 12pt; line-height: 1.35em;}");
+// $h->addStyle("td { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 14; color: 000000; border: 0;}");
+// $h->addStyle("table { border-collapse: collapse;}");
+// $h->addStyle(".banner { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
+// $h->addStyle(".rcell { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
+$h->addStyle("h1 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 20pt; font-style: bold; color: 000000; border: 0; line-height: 1.5em; }");
 $h->addStyle("h2 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 16pt; font-style: bold; color: 000000; border: 0;}");
 $h->addStyle("h3 { padding: 0px; padding-top: 5px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12pt; font-style: bold; color: 000000; border: 0;}");
 $h->addStyle("a { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; color: 000000; border: 0;}");
@@ -206,6 +217,11 @@ $h->addStyle("div.installation {
     border: 0;
     display: inline-block;
 }"); 
+$h->addStyle("div.row span { position: absolute; }");
+$h->addStyle("div.row span:nth-child(1) { left: 20px; }");
+$h->addStyle("div.row span:nth-child(2) { left: 250px; }");
+$h->addStyle("div.row span:nth-child(3) { left: 400px; }");
+
 $h->addStyle("#banner-container { /* border: solid 1px green; */ margin: 0; vertical-align: top; }");
 $h->addStyle("#logo-container { /* border: solid 1px red; */ margin: 0px; vertical-align: top; display: inline-block; }");
 $h->addStyle("#text-container { /* border: solid 1px blue; */ margin-left: 10px; vertical-align: top; display: inline-block; }");
@@ -222,8 +238,8 @@ print <<<EOF
 <div id="logo-container"><img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br></div><!-- end logo-container -->
 <div id="text-container">
 <h1>USYVL Tools Portal</h1>
-<div class="version">version $version</div> install on <div class="installation">$installation_nickname</div>
-<h3>This portal provides links to various resources used to maintain USYVL schedules</h3>
+<div class="version">version $version</div> deployed on <div class="installation">$installation_nickname</div>
+<h3>This portal provides links to various resources used to maintain and support USYVL programs</h3>
 </div><!-- end text-container -->
 </div><!-- end banner-container -->
 <br>
