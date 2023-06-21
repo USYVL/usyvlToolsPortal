@@ -69,7 +69,7 @@ class usyvlUtilsIndex {
         $this->buf = '';
 
         // start this list off with files/dirs we do NOT want to show up at the bottom (optional)
-        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store','config.php','config.php.default','version.php');
+        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store','config.php','config.php.default','version.php','css');
         $this->fileList = array();
         // scan local dir for directories and files
         // add in the specific ones we want to include
@@ -168,7 +168,7 @@ class usyvlUtilsIndex {
 
         $this->specified[] = $entry;
         $this->buf .= '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
-        if ( isset($lversion) && $lversion != '') $this->buf .= " <span class=\"sub-version\">(v$lversion)</span> ";
+        $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "<span class=\"sub-version\"></span> " ;
         $this->buf .= "<span>$desc</span>" ;
         $this->buf .= "$indicator</div><br>\n";
     }
@@ -183,50 +183,7 @@ if ( file_exists('version.php')){
 }
 $h = new htmlDoc("USYVL Tools Portal","");
 $h->setHeading();
-
-$h->addStyle("body { font-family: arial,verdana,helvetica; font-size: 12pt; line-height: 1.35em;}");
-// $h->addStyle("td { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 14; color: 000000; border: 0;}");
-// $h->addStyle("table { border-collapse: collapse;}");
-// $h->addStyle(".banner { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
-// $h->addStyle(".rcell { padding-left: 10px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12; color: 0000ff; border: 0;}");
-$h->addStyle("h1 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 20pt; font-style: bold; color: 000000; border: 0; line-height: 1.5em; }");
-$h->addStyle("h2 { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 16pt; font-style: bold; color: 000000; border: 0;}");
-$h->addStyle("h3 { padding: 0px; padding-top: 5px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; font-size: 12pt; font-style: bold; color: 000000; border: 0;}");
-$h->addStyle("a { padding: 0px; margin: 0px; vertical-align: top; font-family: arial,verdana,helvetica; color: 000000; border: 0;}");
-$h->addStyle("div.version {
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 5px;
-    vertical-align: top;
-    font-family: helvetica;
-    font-size: 12pt;
-    font-weight: bold;
-    color: #aa0000;
-    border: 0;
-    display: inline-block;
-}"); 
-$h->addStyle("div.installation {
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 5px;
-    vertical-align: top;
-    font-family: helvetica;
-    font-size: 12pt;
-    font-weight: bold;
-    color: #0000aa;
-    border: 0;
-    display: inline-block;
-}"); 
-$h->addStyle("div.row span { position: absolute; }");
-$h->addStyle("div.row span:nth-child(1) { left: 20px; }");
-$h->addStyle("div.row span:nth-child(2) { left: 250px; }");
-$h->addStyle("div.row span:nth-child(3) { left: 400px; }");
-
-$h->addStyle("#banner-container { /* border: solid 1px green; */ margin: 0; vertical-align: top; }");
-$h->addStyle("#logo-container { /* border: solid 1px red; */ margin: 0px; vertical-align: top; display: inline-block; }");
-$h->addStyle("#text-container { /* border: solid 1px blue; */ margin-left: 10px; vertical-align: top; display: inline-block; }");
-$h->addStyle(".sub-version { font-style: italic; font-weight: bold; color: green; }");
-
+$h->css('./css/usyvl-portal.css');
 $h->beg();
 
 $version = VERSION;

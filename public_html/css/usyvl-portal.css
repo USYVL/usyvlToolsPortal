@@ -1,0 +1,77 @@
+/* portal.css */
+body { 
+	font-family: arial,verdana,helvetica; font-size: 12pt; line-height: 1.35em;
+}
+h1 { 
+	padding: 0px; 
+	margin: 0px; 
+	vertical-align: top; 
+/*	font-family: arial,verdana,helvetica; */
+	font-size: 20pt; 
+	font-style: bold; 
+	color: 000000; 
+	border: 0; 
+	line-height: 1.5em; 
+}
+h2 { 
+	padding: 0px; 
+	margin: 0px; 
+	vertical-align: top; 
+/*	font-family: arial,verdana,helvetica; */
+	font-size: 16pt; 
+	font-style: bold; 
+	color: 000000; 
+	border: 0;
+}
+h3 { 
+	padding: 0px; 
+	padding-top: 5px; 
+	margin: 0px; 
+	vertical-align: top; 
+/*	font-family: arial,verdana,helvetica; */
+	font-size: 12pt; 
+	font-style: bold; 
+	color: 000000; 
+	border: 0;
+}
+a { 
+	padding: 0px; 
+	margin: 0px; 
+	vertical-align: top; 
+/*	font-family: arial,verdana,helvetica; */
+	color: 000000; 
+	border: 0;
+}
+div.version {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 5px;
+    vertical-align: top;
+/*    font-family: helvetica;*/
+    font-size: 12pt;
+    font-weight: bold;
+    color: #aa0000;
+    border: 0;
+    display: inline-block;
+} 
+div.installation {
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 5px;
+    vertical-align: top;
+/*    font-family: helvetica;*/
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0000aa;
+    border: 0;
+    display: inline-block;
+} 
+div.row span { position: absolute; }
+div.row span:nth-child(1) { left: 20px; }
+div.row span:nth-child(2) { left: 250px; }
+div.row span:nth-child(3) { left: 400px; }
+
+#banner-container { margin: 0; vertical-align: top; }
+#logo-container { margin: 0px; vertical-align: top; display: inline-block; }
+#text-container { margin-left: 10px; vertical-align: top; display: inline-block; }
+.sub-version { font-style: italic; font-weight: bold; color: green; }
