@@ -56,7 +56,7 @@ class usyvlUtilsIndex {
     private   string  $local;
     private   string  $localS;
     private   string  $buf;
-    private   array   $specified;
+    private   array   $skipped;
     private   array   $fileList;
     private   array   $others;
 
@@ -69,8 +69,10 @@ class usyvlUtilsIndex {
         $this->buf = '';
 
         // start this list off with files/dirs we do NOT want to show up at the bottom (optional)
-        $this->specified = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store','config.php','config.php.default','version.php','css');
+        $this->skipped = array('.git','.gitignore','README.md','Index.php','usyvllogo.jpg','unused','testing','krumo-1.6','wiki-db','.DS_Store','config.php','config.php.default','version.php','css');
         $this->fileList = array();
+        // alternatively, we may want to just scan for symlinks now
+
         // scan local dir for directories and files
         // add in the specific ones we want to include
         // display any additional items found
@@ -84,12 +86,12 @@ class usyvlUtilsIndex {
 
     }
     function remainingEntries(){
-        $this->others = array_diff($this->fileList,$this->specified);
+        $this->others = array_diff($this->fileList,$this->skipped);
         //print_pre($this->fileList,"filelist");
         //print_pre($others,"others");
 
         if ( count($this->others) == 0) return;
-        $this->newSection('Dynamically Loaded, Unspecified Resources existing on this portal:');
+        $this->newSection('Dynamically Loaded, Unskipped Resources existing on this portal:');
         foreach($this->others as $o){
             if (is_link($o)) continue;
 
@@ -149,12 +151,12 @@ class usyvlUtilsIndex {
                 // the server is the same
                 $indicator = " #";
 
-                // since the entry specified is on the local server see if the basename
+                // since the entry skipped is on the local server see if the basename
                 // portion matches a directory at this location, if so tag it so it doesn't
                 // show up in the other section.
                 $bn = basename($entry);
                 if( file_exists($bn) && is_dir($bn)){
-                    $this->specified[] = $bn;
+                    $this->skipped[] = $bn;
                 }
             }
         }
@@ -166,7 +168,7 @@ class usyvlUtilsIndex {
             }
         }
 
-        $this->specified[] = $entry;
+        $this->skipped[] = $entry;
         $this->buf .= '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
         $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "<span class=\"sub-version\"></span> " ;
         $this->buf .= "<span>$desc</span>" ;
@@ -176,20 +178,24 @@ class usyvlUtilsIndex {
         return $this->buf;
     }
 }
-// initial load of version, will have to add
-if ( file_exists('version.php')){
-    include 'version.php';
-    define('VERSION',$GLOBALS['version']);
-}
+
+
+
 $h = new htmlDoc("USYVL Tools Portal","");
 $h->setHeading();
 $h->css('./css/usyvl-portal.css');
 $h->beg();
 
-$version = VERSION;
 $installation_nickname = INSTALLATION_NICKNAME;
 $uui = new usyvlUtilsIndex();
-// this should be rejiggered using divs...
+
+// get version for the portal itself - timing of this is important, must be done AFTER usyvlUtilsIndex is called
+// since that may load version numbers of subsites into GLOBALS['version']
+if ( file_exists('version.php')){
+    include './version.php';
+    $version = $GLOBALS['version'];
+}
+
 print <<<EOF
 <div id="banner-container">
 <div id="logo-container"><img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br></div><!-- end logo-container -->
@@ -204,9 +210,5 @@ EOF;
 
 print $uui->output();
 
-
 $h->end();
-
-//phpinfo();
-
 ?>
