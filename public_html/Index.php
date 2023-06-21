@@ -170,7 +170,8 @@ class usyvlUtilsIndex {
 
         $this->skipped[] = $entry;
         $this->buf .= '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
-        $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "<span class=\"sub-version\"></span> " ;
+        // $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "<span class=\"sub-version\"></span> " ;
+        $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "" ;
         $this->buf .= "<span>$desc</span>" ;
         $this->buf .= "$indicator</div><br>\n";
     }
