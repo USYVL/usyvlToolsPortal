@@ -124,7 +124,7 @@ class usyvlUtilsIndex {
         $this->addEntry("https://mwf.usyvl.org","production site5","USYVL Mobile Web Framework Site (Supports Mobile Site)");
         $this->addEntry("https://schedules.usyvl.org","production site5","USYVL Schedules Site");
         $this->addEntry("https://youthvolleyball.com","production site5","YouthVolleyball.com Feeder site");
-        $this->addEntry("https://tools.usyvl.org/wiki","production site5","USYVL Development Documentation Wiki");
+        $this->addEntry("https://tools.usyvl.org/wiki","production linode","USYVL Development Documentation Wiki");
         $this->addEntry("https://mwf8.usyvl.org/","development linode","Mobile Web Framework served from linode.usyvl.org");
         $this->addEntry("https://tools.usyvl.org/","development linode","USYVL Tools Portal");
         $this->addEntry("http://localhost:8080/usyvl","development aaron home","USYVL Tools Portal (home dev)");
@@ -175,7 +175,7 @@ class usyvlUtilsIndex {
             }
         }
         else {
-            // see if a version.php file exists
+            // see if a version.php file exists for USYVL developed code
             $col1 = '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
             $col3 = "<span>$desc</span>\n";
             if (file_exists($entry . '/version.php')){
@@ -183,6 +183,16 @@ class usyvlUtilsIndex {
                 $lversion = $GLOBALS['version'];
                 if (isset($lversion) && $lversion != ''){
                     $col2="<span class=\"sub-version\">(v$lversion)</span>";
+                }
+            }
+
+            if (file_exists($entry . '/includes/Defines.php')){
+                // this is going to be harder to pull out with php
+                $definesContent = file($entry . '/includes/Defines.php');
+                foreach($definesContent as $line){
+                    if (preg_match('/MW_VERSION/',$line)){
+                        print "# Found MW_VERSION line: $line<br>\n";
+                    }
                 }
             }
         }
