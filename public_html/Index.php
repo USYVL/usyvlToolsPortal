@@ -191,7 +191,8 @@ class usyvlUtilsIndex {
                 $definesContent = file($entry . '/includes/Defines.php');
                 foreach($definesContent as $line){
                     if (preg_match('/MW_VERSION/',$line)){
-                        print "# Found MW_VERSION line: $line<br>\n";
+                        $wg_version = preg_replace('[, a-zA-Z\']','',$line);
+                        print "# Found MW_VERSION line: $line :$wg_version<br>\n";
                     }
                 }
             }
