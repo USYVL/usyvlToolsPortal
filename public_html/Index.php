@@ -119,11 +119,14 @@ class usyvlUtilsIndex {
         $this->addEntry("mwf","Mobile Web Framework","MWF code.");
 
         $this->newSection('Remote/External Resources - referenced through a fully qualified URI (does\'t change based on development/hosting platform):');
-        $this->addEntry("http://www.usyvl.org","USYVL Home Page","USYVL Live Public Server");
-        $this->addEntry("http://m.usyvl.org","Mobile Site (live)","USYVL Live Mobile Site");
-        $this->addEntry("http://schedules.usyvl.org","Schedules Site (live)","USYVL Live Schedules Site");
-        $this->addEntry("http://youthvolleyball.com","YouthVolleyball.com (live)","YouthVolleyball.com site");
-        $this->addEntry("http://tools.usyvl.org/wiki","USYV Wiki","USYVL Development Documentation Wiki");
+        $this->addEntry("https://www.usyvl.org","production site5","USYVL Organizational Public Server");
+        $this->addEntry("https://m.usyvl.org","production site5","USYVL Mobile Site");
+        $this->addEntry("https://mwf.usyvl.org","production site5","USYVL Mobile Web Framework Site (used for Mobile Site)");
+        $this->addEntry("https://schedules.usyvl.org","production site5","USYVL Schedules Site");
+        $this->addEntry("https://youthvolleyball.com","production site5","YouthVolleyball.com Feeder site");
+        $this->addEntry("https://tools.usyvl.org/wiki","production site5","USYVL Development Documentation Wiki");
+        $this->addEntry("https://mwf8.usyvl.org/","development linode","Mobile Web Framework served from linode.usyvl.org");
+        $this->addEntry("https://tools.usyvl.org/","development linode","USYVL Tools Portal");
     }
     // Trying to sort out if we want to group absolute references (ie: URLs) together
     // programmatically, or require input to do so.  Also, do we want to differentiate
@@ -145,7 +148,10 @@ class usyvlUtilsIndex {
         // possibly indicate that situation in the link somehow, not sure exactly
         // how or what we want to do and if there is a real significance in it.
         // only really applicable to the wiki it looks like.
-        $indicator = "";
+        $indicator = '';
+        $col2 = '';
+        $col1 = '';
+        $col3 = '';
         if ($absurl){
             if ( $this->local == dirname($entry) || $this->localS == dirname($entry) ){
                 // the server is the same
@@ -158,20 +164,33 @@ class usyvlUtilsIndex {
                 if( file_exists($bn) && is_dir($bn)){
                     $this->skipped[] = $bn;
                 }
+                // $col1 = '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
+            }
+            else {
+                // not running on this server
+                $col1 = "<span class=\"sub-version\"><a href=\"$entry\">$entry</a></span>";
+                $col2 = "<span>$label</span>\n";
+                $col3 = "<span>$desc</span>\n";
             }
         }
         else {
             // see if a version.php file exists
+            $col1 = '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
+            $col3 = "<span>$desc</span>\n";
             if (file_exists($entry . '/version.php')){
                 include $entry . '/version.php';
                 $lversion = $GLOBALS['version'];
+                if (isset($lversion) && $lversion != ''){
+                    $col2="<span class=\"sub-version\">(v$lversion)</span>";
+                }
             }
         }
 
         $this->skipped[] = $entry;
-        $this->buf .= '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
+        $this->buf .= "<div class=\"row\">";
         // $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "<span class=\"sub-version\"></span> " ;
-        $this->buf .= ( isset($lversion) && $lversion != '') ? " <span class=\"sub-version\">(v$lversion)</span> " : "" ;
+        $this->buf .= ( isset($col1) && $col1 != '') ? "$col1" : "" ;
+        $this->buf .= ( isset($col2) && $col2 != '') ? "$col2" : "" ;
         $this->buf .= "<span>$desc</span>" ;
         $this->buf .= "$indicator</div><br>\n";
     }
