@@ -193,7 +193,9 @@ class usyvlUtilsIndex {
                 foreach($definesContent as $line){
                     if (preg_match('/MW_VERSION.*([0-9]\.[0-9]*\.[0-9]*)\'/',$line,$m)){
                         $wg_version = preg_replace('[, a-zA-Z\']','',$line);
-                        print "# Found MW_VERSION line: $line :$wg_version:$m[1]<br>\n";
+                        if( $m[1] != '' ){
+                            $col2="<span class=\"sub-version\">(v$wg_version)</span>";
+                        }
                     }
                 }
             }
