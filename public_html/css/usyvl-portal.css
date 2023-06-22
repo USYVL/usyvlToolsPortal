@@ -69,7 +69,7 @@ div.installation {
 div.row span { position: absolute; }
 div.row span:nth-child(1) { left: 20px; }
 div.row span:nth-child(2) { left: 250px; }
-div.row span:nth-child(3) { left: 400px; }
+div.row span:nth-child(3) { left: 425px; }
 
 #banner-container { margin: 0; vertical-align: top; }
 #logo-container { margin: 0px; vertical-align: top; display: inline-block; }
