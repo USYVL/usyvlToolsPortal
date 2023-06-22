@@ -194,7 +194,7 @@ class usyvlUtilsIndex {
                     if (preg_match('/MW_VERSION.*([0-9]\.[0-9]*\.[0-9]*)\'/',$line,$m)){
                         $wg_version = preg_replace('[, a-zA-Z\']','',$line);
                         if( $m[1] != '' ){
-                            $col2="<span class=\"sub-version\">(v$wg_version)</span>";
+                            $col2="<span class=\"sub-version\">(v{$m[1]})</span>";
                         }
                     }
                 }
