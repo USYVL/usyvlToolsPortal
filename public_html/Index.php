@@ -121,12 +121,13 @@ class usyvlUtilsIndex {
         $this->newSection('Remote/External Resources - referenced through a fully qualified URI (does\'t change based on development/hosting platform):');
         $this->addEntry("https://www.usyvl.org","production site5","USYVL Organizational Public Server");
         $this->addEntry("https://m.usyvl.org","production site5","USYVL Mobile Site");
-        $this->addEntry("https://mwf.usyvl.org","production site5","USYVL Mobile Web Framework Site (used for Mobile Site)");
+        $this->addEntry("https://mwf.usyvl.org","production site5","USYVL Mobile Web Framework Site (Supports Mobile Site)");
         $this->addEntry("https://schedules.usyvl.org","production site5","USYVL Schedules Site");
         $this->addEntry("https://youthvolleyball.com","production site5","YouthVolleyball.com Feeder site");
         $this->addEntry("https://tools.usyvl.org/wiki","production site5","USYVL Development Documentation Wiki");
         $this->addEntry("https://mwf8.usyvl.org/","development linode","Mobile Web Framework served from linode.usyvl.org");
         $this->addEntry("https://tools.usyvl.org/","development linode","USYVL Tools Portal");
+        $this->addEntry("http://localhost:8080/usyvl","development aaron home","USYVL Tools Portal (home dev)");
     }
     // Trying to sort out if we want to group absolute references (ie: URLs) together
     // programmatically, or require input to do so.  Also, do we want to differentiate
