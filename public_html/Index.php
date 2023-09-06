@@ -125,6 +125,7 @@ class usyvlUtilsIndex {
         $this->addEntry("https://schedules.usyvl.org","production site5","USYVL Schedules Site");
         $this->addEntry("https://youthvolleyball.com","production site5","YouthVolleyball.com Feeder site");
         $this->addEntry("https://tools.usyvl.org/wiki","production linode","USYVL Development Documentation Wiki");
+        $this->addEntry("https://s.usyvl.org/","production linode","schedules site tied in directly to scheduling system - served from linode.usyvl.org");
         $this->addEntry("https://mwf8.usyvl.org/","development linode","Mobile Web Framework served from linode.usyvl.org");
         $this->addEntry("https://tools.usyvl.org/","development linode","USYVL Tools Portal");
         $this->addEntry("http://localhost:8080/usyvl","development aaron home","USYVL Tools Portal (home dev)");
@@ -185,7 +186,7 @@ class usyvlUtilsIndex {
                     $col2="<span class=\"sub-version\">(v$lversion)</span>";
                 }
             }
-
+            // This case if for Mediawiki install underneath the portal
             if (file_exists($entry . '/includes/Defines.php')){
                 $m = array();
                 // this is going to be harder to pull out with php
