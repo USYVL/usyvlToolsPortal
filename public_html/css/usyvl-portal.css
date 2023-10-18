@@ -11,7 +11,7 @@ h1 {
 	font-style: bold; 
 	color: 000000; 
 	border: 0; 
-	line-height: 1.5em; 
+	line-height: 1.3em; 
 }
 h2 { 
 	padding: 0px; 
@@ -45,7 +45,7 @@ a {
 div.version {
     padding: 0px;
     margin: 0px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     vertical-align: top;
 /*    font-family: helvetica;*/
     font-size: 12pt;
@@ -57,7 +57,7 @@ div.version {
 div.installation {
     padding: 0px;
     margin: 0px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     vertical-align: top;
 /*    font-family: helvetica;*/
     font-size: 12pt;
@@ -75,3 +75,4 @@ div.row span:nth-child(3) { left: 450px; }
 #logo-container { margin: 0px; vertical-align: top; display: inline-block; }
 #text-container { margin-left: 10px; vertical-align: top; display: inline-block; }
 .sub-version { font-style: italic; font-weight: bold; color: green; }
+.version-info { font-style: italic; font-weight: bold; color: black; font-size: 10pt; line-height: 12pt;}

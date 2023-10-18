@@ -1,50 +1,8 @@
 <?php
 // This requires access to some shared external resources, so we need to do some 
 // error checking for that.
-define('CONFIG_FILE',"./config.php");
+require_once './inc/init.php';
 
-class errPage {
-    function __construct($a=array('body' => "Default Body Text",'title' => "USYVL Tools Portal")){
-        $this->data = $a;
-    }
-    function run(){
-        $buf  = "<!doctype html>\n<html lang=\"en\">\n<head\n";
-        $buf .= "  <meta charset=\"utf-8\">\n";
-        $buf .= "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
-        $buf .= "  <title>{$this->data['title']}</title>\n";
-        $buf .= "  <meta name=\"description\" content=\"USYVL Tools Portal\">\n";
-        $buf .= "  <meta name=\"author\" content=\"USYVL\">\n";
-        $buf .= "</head>\n";
-        $buf .= "<body>\n{$this->data['body']}\n</body>\n</html>\n";
-        print "$buf";
-        exit();
-    }
-}
-// check for config file
-if (file_exists(CONFIG_FILE)){
-    include_once CONFIG_FILE;
-}
-else{
-    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"No config.php file found - copy config.php.default to config.php and then modify values appropriately")))->run();
-}
-
-if (! defined('LOCAL_INCLUDE_PATHS')){
-    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"LOCAL_INCLUDE_PATHS undefined in config file (". CONFIG_FILE . ")")))->run();
-}
-
-$ipaths = explode(PATH_SEPARATOR,LOCAL_INCLUDE_PATHS);
-foreach($ipaths as $ipc){
-    if ( ! is_dir($ipc)){
-        $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"A path ($ipc) in LOCAL_INCLUDE_PATHS does not exist.  Modify config file (". CONFIG_FILE . ")")))->run();
-    }
-}
-set_include_path(get_include_path() . PATH_SEPARATOR . LOCAL_INCLUDE_PATHS);
-
-if (! stream_resolve_include_path('htmlDoc.php')){
-    $gip = get_include_path();
-    $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"Unable to find htmlDoc.php in the current include path ($gip)")))->run();
-
-}
 require_once('htmlDoc.php');
 require_once('fileUtils.php');
 require_once('printUtils.php');
@@ -175,11 +133,29 @@ class usyvlUtilsIndex {
                 $col3 = "<span>$desc</span>\n";
             }
         }
-        else {
-            // see if a version.php file exists for USYVL developed code
+        else {   // This is for locally hosted repos, we can't get this info for remote repos
+            // want/need to add a .git based version like the code is using, but the way I set things
+            // up I can't see the .git folder of the entry.  Hmmm, maybe I can
+            
+
             $col1 = '<div class="row"><span><a href="' . $entry . '">' . $label . '</a></span>' ;
             $col3 = "<span>$desc</span>\n";
-            if (file_exists($entry . '/version.php')){
+
+
+            // want/need to add a .git based version like the code is using, but the way I set things
+            // up I can't see the .git folder of the entry.  Hmmm, maybe I can
+            // echo "checking path: " . $entry . '/../.git' . "<br>\n";
+            if (file_exists($entry . '/../.git') && is_dir($entry . '/../.git')){
+                $einfo = new versionInfoGitClass($entry . '/../.git');
+                $lversion = $einfo->version();
+                $lbranch  = $einfo->branch();
+                if (isset($lversion) && $lversion != ''){
+                    $col2="<span class=\"sub-version\">(v{$lversion} - {$lbranch})</span>";
+                }
+
+            }
+            // see if a version.php file exists for USYVL developed code
+            elseif (file_exists($entry . '/version.php')){
                 include $entry . '/version.php';
                 $lversion = $GLOBALS['version'];
                 if (isset($lversion) && $lversion != ''){
@@ -237,9 +213,10 @@ print <<<EOF
 <div id="logo-container"><img src="usyvllogo.jpg" align=left alt='USYVL Logo'><br></div><!-- end logo-container -->
 <div id="text-container">
 <h1>USYVL Tools Portal</h1>
-<div class="version">version $version</div> deployed on <div class="installation">$installation_nickname</div>
-<h3>This portal provides links to various resources used to maintain and support USYVL programs</h3>
+<div class="version">version {$GLOBALS['gitVersionInfo']->version()}</div> deployed on <div class="installation">$installation_nickname</div>
+<div class="version-info">{$GLOBALS['gitVersionInfo']->info()}</div>
 </div><!-- end text-container -->
+<h3>This portal provides links to various resources used to maintain and support USYVL programs</h3>
 </div><!-- end banner-container -->
 <br>
 EOF;
