@@ -27,35 +27,34 @@ $rel = implode("/",$aa) . "/";
 
 // There is some code left for debugging this area at bottom of the file
 // This was for debugging
-$dbufa = array(
-    '__DIR__'               => __DIR__,
-    '__DIR__ (rp)'          => realpath(__DIR__),
-    '__FILE__'              => __FILE__,
-    '__FILE__ (rp)'         => realpath(__FILE__),
-    'DOCUMENT_ROOT'         => $_SERVER['DOCUMENT_ROOT'],
-    'DOCUMENT_ROOT (rp)'    => realpath($_SERVER['DOCUMENT_ROOT']),
-    'SCRIPT_FILENAME'       => $_SERVER['SCRIPT_FILENAME'],
-    'SCRIPT_FILENAME (rp)'  => realpath($_SERVER['SCRIPT_FILENAME']),
-    'PHP_SELF'              => $_SERVER['PHP_SELF'],
-    'toprel (src code)'     => "$toprel",
-    'top'                   => "$top",
-    'aa'                    => "$aa",
-    'dlevel'                => "$dlevel",
-    'rel'                   => "$rel",
-    'basepath'              => $basepath,
-    'thispath'              => $thispath,
-    'diffpath'              => $diffpath,
-    'difflevel'             => $dlevel
-);
-$dbuf = "<table>";
-foreach( $dbufa as $k => $v){
-    $dbuf .= "<tr>";
-    $dbuf .= "<td>$k</td>";
-    $dbuf .= "<td>$v</td>";
-    $dbuf .= "</tr>";
-}
-$dbuf .="</table>\n";
-print "$dbuf";
+// $dbufa = array(
+//     '__DIR__'               => __DIR__,
+//     '__DIR__ (rp)'          => realpath(__DIR__),
+//     '__FILE__'              => __FILE__,
+//     '__FILE__ (rp)'         => realpath(__FILE__),
+//     'DOCUMENT_ROOT'         => $_SERVER['DOCUMENT_ROOT'],
+//     'DOCUMENT_ROOT (rp)'    => realpath($_SERVER['DOCUMENT_ROOT']),
+//     'SCRIPT_FILENAME'       => $_SERVER['SCRIPT_FILENAME'],
+//     'SCRIPT_FILENAME (rp)'  => realpath($_SERVER['SCRIPT_FILENAME']),
+//     'PHP_SELF'              => $_SERVER['PHP_SELF'],
+//     'toprel (src code)'     => "$toprel",
+//     'top'                   => "$top",
+//     'dlevel'                => "$dlevel",
+//     'rel'                   => "$rel",
+//     'basepath'              => $basepath,
+//     'thispath'              => $thispath,
+//     'diffpath'              => $diffpath,
+//     'difflevel'             => $dlevel
+// );
+// $dbuf = "<table>";
+// foreach( $dbufa as $k => $v){
+//     $dbuf .= "<tr>";
+//     $dbuf .= "<td>$k</td>";
+//     $dbuf .= "<td>$v</td>";
+//     $dbuf .= "</tr>";
+// }
+// $dbuf .="</table>\n";
+// print "$dbuf";
 
 
 $incdirs = array('','inc');  // dirs to include below the top level dir
