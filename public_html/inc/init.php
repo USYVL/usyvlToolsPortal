@@ -26,6 +26,38 @@ $rel = implode("/",$aa) . "/";
 // now need to get rid of the common prefix
 
 // There is some code left for debugging this area at bottom of the file
+// This was for debugging
+$dbufa = array(
+    '__DIR__'               => __DIR__,
+    '__DIR__ (rp)'          => realpath(__DIR__),
+    '__FILE__'              => __FILE__,
+    '__FILE__ (rp)'         => realpath(__FILE__),
+    'DOCUMENT_ROOT'         => $_SERVER['DOCUMENT_ROOT'],
+    'DOCUMENT_ROOT (rp)'    => realpath($_SERVER['DOCUMENT_ROOT']),
+    'SCRIPT_FILENAME'       => $_SERVER['SCRIPT_FILENAME'],
+    'SCRIPT_FILENAME (rp)'  => realpath($_SERVER['SCRIPT_FILENAME']),
+    'PHP_SELF'              => $_SERVER['PHP_SELF'],
+    'toprel (src code)'     => "$toprel",
+    'top'                   => "$top",
+    'subdir'                => "$subdir",
+    'level'                 => "$level",
+    'subdirn'               => "$subdirn",
+    'leveln'                => "$leveln",
+    'rel'                   => "$rel",
+    'basepath'              => $basepath,
+    'thispath'              => $thispath,
+    'diffpath'              => $diffpath,
+    'difflevel'             => $dlevel
+);
+$dbuf = "<table>";
+foreach( $dbufa as $k => $v){
+    $dbuf .= "<tr>";
+    $dbuf .= "<td>$k</td>";
+    $dbuf .= "<td>$v</td>";
+    $dbuf .= "</tr>";
+}
+$dbuf .="</table>\n";
+print "$dbuf";
 
 
 $incdirs = array('','inc');  // dirs to include below the top level dir
@@ -35,11 +67,13 @@ foreach($incdirs as $inc){
 
 require_once 'errPageClass.php';
 
-define('CONFIG_FILE',"../config.php");
+define('CONFIG_FILE',"config.php");
 
 // check for config file
-if (file_exists(CONFIG_FILE)){
-    include_once CONFIG_FILE;
+$configLocation = stream_resolve_include_path(CONFIG_FILE);
+// echo "incpath: " . ini_get('include_path') . "<br>configLocation:" . $configLocation . "<br>\n";
+if (file_exists($configLocation)){
+    require_once $configLocation;
 }
 else{
     $h = (new errPage(array('title'=>"USYVL Tools Portal",'body'=>"No config.php file found - copy config.php.default to config.php and then modify values appropriately")))->run();
@@ -64,5 +98,9 @@ if (! stream_resolve_include_path('htmlDoc.php')){
 }
 
 require_once 'versionInfoGit.php';
+require_once 'htmlDoc.php';
+require_once 'fileUtils.php';
+require_once 'printUtils.php';
+
 
 ?>

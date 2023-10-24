@@ -1,5 +1,6 @@
 <?php
 class errPage {
+    public   $data;
     function __construct($a=array('body' => "Default Body Text",'title' => "USYVL Tools Portal")){
         $this->data = $a;
     }
